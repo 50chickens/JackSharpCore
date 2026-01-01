@@ -1,4 +1,5 @@
 using JackSharp.ConsoleApp.Diagnostics.Logging;
+using JackSharp.ConsoleApp.Diagnostics.Options;
 using JackSharp.ConsoleApp.Diagnostics.Services;
 using Microsoft.Extensions.Options;
 using NLog.Extensions.Logging;
@@ -42,6 +43,15 @@ public static class ContainerBuilder
         builder.Services.AddOptions<JackOptions>()
             .Bind(builder.Configuration.GetSection(JackOptions.SettingsKey));
 
+        builder.Services.AddOptions<SimpleLevelMeterOptions>()
+            .Bind(builder.Configuration.GetSection(SimpleLevelMeterOptions.Settings))
+            .Configure(options =>
+            {
+                // Set defaults if not in config
+                options.MeasurementDuration = 3;
+                options.MeasurementCount = 5;
+            });
+
         // Register logger first so it's available for all other services
         builder.Services.AddSingleton(typeof(ILog<>), typeof(NLogAdapter<>));
 
@@ -63,17 +73,11 @@ public static class ContainerBuilder
         builder.Services.AddSingleton<IJackConnectionManagerService, JackConnectionManagerService>();
         builder.Services.AddSingleton<IJackAudioLevelMeterService, JackAudioLevelMeterService>();
         builder.Services.AddSingleton<IJackTestToneService, JackTestToneService>();
-
-        // Register hosted services (choose one based on --audio-test flag)
-        // Check for --audio-test in command line args
-        var useAudioDiagnostics = args.Contains("--audio-test");
-        if (useAudioDiagnostics)
-        {
-            builder.Services.AddHostedService<AudioDiagnosticsWorker>();
-        }
-        else
-        {
-            builder.Services.AddHostedService<DiagnosticsWorker>();
-        }
+        builder.Services.AddSingleton<IJackHardwareInputMonitorService, JackHardwareInputMonitorService>();
+        builder.Services.AddSingleton<IJackSimpleLevelMeterService, JackSimpleLevelMeterService>();
+        builder.Services.AddSingleton<IJackRawBufferDebugService, JackRawBufferDebugService>();
+        builder.Services.AddSingleton<IAlsaVerificationService, AlsaVerificationService>();
+        builder.Services.AddHostedService<SimpleLevelMeterWorker>();
+        
     }
 }

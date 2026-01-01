@@ -201,9 +201,8 @@ namespace JackSharp
 			if (ProcessFunc != null) {
 				ProcessFunc (new ProcessBuffer (nframes, audioInBuffers, audioOutBuffers, midiInEvents, midiOutEvents));
 			}
-			foreach (var audioInBuffer in audioInBuffers) {
-				audioInBuffer.CopyToPointer ();
-			}
+			// Note: Do NOT call CopyToPointer on input buffers - they are read-only from Jack
+			// Only copy output buffers back to Jack
 			foreach (var audioOutBuffer in audioOutBuffers) {
 				audioOutBuffer.CopyToPointer ();
 			}

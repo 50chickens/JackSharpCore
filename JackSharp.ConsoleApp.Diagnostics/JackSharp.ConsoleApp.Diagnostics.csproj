@@ -4,7 +4,6 @@
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>dotnet-JackSharp.ConsoleApp.Diagnostics-c825e7d8-4b50-42a2-99f8-34dc00243586</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
