@@ -37,7 +37,7 @@ public class JackAudioLevelMeterService(ILog<JackAudioLevelMeterService> log) : 
             _log.Info($"Connecting to Jack to measure {numChannels} input channels for {captureDurationMs}ms...");
 
             // Create a processor with input ports and autoconnect to physical inputs
-            using var processor = new JackSharp.Processor("AudioLevelMeter", audioInPorts: numChannels, autoconnect: true);
+            using var processor = new JackSharp.Processor("AudioLevelMeter", numChannels, 0, 0, 0, true);
             
             if (!processor.Start())
             {

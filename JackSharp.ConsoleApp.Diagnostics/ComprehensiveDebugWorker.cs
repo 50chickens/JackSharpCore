@@ -21,25 +21,19 @@ public class ComprehensiveDebugWorker(
     {
         try
         {
-            _log.Info("╔══════════════════════════════════════════════════════════╗");
-            _log.Info("║     COMPREHENSIVE AUDIO DEBUGGING TOOL                  ║");
-            _log.Info("╚══════════════════════════════════════════════════════════╝\n");
+            _log.Info("COMPREHENSIVE AUDIO DEBUGGING TOOL");
 
             // Step 1: Verify ALSA layer
             _log.Info("STEP 1: ALSA Hardware Layer Verification");
-            _log.Info("─────────────────────────────────────────────────────────\n");
             await _alsaService.VerifyAlsaCaptureAsync(stoppingToken);
 
             await Task.Delay(1000, stoppingToken);
 
             // Step 2: Deep Jack buffer inspection
-            _log.Info("\n\nSTEP 2: Jack Audio Buffer Inspection");
-            _log.Info("─────────────────────────────────────────────────────────\n");
+            _log.Info("Inspecting Jack audio buffers");
             await _bufferDebugService.InspectBuffersAsync(stoppingToken);
 
-            _log.Info("\n\n╔══════════════════════════════════════════════════════════╗");
-            _log.Info("║     DEBUGGING COMPLETE                                   ║");
-            _log.Info("╚══════════════════════════════════════════════════════════╝");
+            _log.Info("Debugging complete");
         }
         catch (Exception ex)
         {

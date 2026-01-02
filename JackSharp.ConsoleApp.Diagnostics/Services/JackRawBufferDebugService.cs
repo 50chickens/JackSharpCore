@@ -19,12 +19,12 @@ public class JackRawBufferDebugService(ILog<JackRawBufferDebugService> log) : IJ
     {
         try
         {
-            _log.Info("=== Raw Buffer Debug Tool ===");
-            _log.Info("Connecting to Jack to inspect audio buffers at the lowest level...\n");
+            _log.Info("Inspecting audio buffers at the lowest level");
+            _log.Info("Connecting to Jack to inspect audio buffers at the lowest level...");
 
             // Create processor with 2 input ports for stereo debugging
             const int debugChannels = 2;
-            using var processor = new Processor("BufferDebugger", audioInPorts: debugChannels, autoconnect: true);
+            using var processor = new Processor("BufferDebugger", debugChannels, 0, 0, 0, true);
 
             if (!processor.Start())
             {
@@ -32,8 +32,8 @@ public class JackRawBufferDebugService(ILog<JackRawBufferDebugService> log) : IJ
                 return;
             }
 
-            _log.Info($"✓ Connected to Jack at {processor.SampleRate}Hz, buffer size: {processor.BufferSize}");
-            _log.Info($"✓ Created {debugChannels} input ports (autoconnected to system capture)\n");
+            _log.Info($"Connected to Jack at {processor.SampleRate}Hz, buffer size: {processor.BufferSize}");
+            _log.Info($"Created {debugChannels} input ports (autoconnected to system capture)");
 
             // Log port connections
             var ports = processor.AudioInPorts.ToList();
@@ -43,7 +43,6 @@ public class JackRawBufferDebugService(ILog<JackRawBufferDebugService> log) : IJ
                 var connectedPort = PortConnectionHelper.GetUpstreamConnectedPortName(ports[i]);
                 _log.Info($"  Port {i + 1}: {portName} <- {connectedPort}");
             }
-            _log.Info("");
 
             var bufferStats = new BufferStatistics[debugChannels];
             for (int i = 0; i < debugChannels; i++)
@@ -118,7 +117,7 @@ public class JackRawBufferDebugService(ILog<JackRawBufferDebugService> log) : IJ
                         }
 
                         double rms = Math.Sqrt(sumSquares / samples.Length);
-                        double dbFS = rms > 0 ? 20.0 * Math.Log10(rms) : -100.0;
+                        double dbFS = rms > 0 ? 20.0 * Math.Log10(rms) : -150.0;
 
                         stats.UpdatePeak(max);
                         stats.UpdatePeak(Math.Abs(min));
@@ -142,22 +141,18 @@ public class JackRawBufferDebugService(ILog<JackRawBufferDebugService> log) : IJ
                     }
                 }
 
-                if (shouldLogDetails)
-                {
-                    _log.Info("");
-                }
-                else if (_callbackCount == MaxCallbacksToLog + 1)
+                if (!shouldLogDetails && _callbackCount == MaxCallbacksToLog + 1)
                 {
                     _log.Info($"(Detailed logging stopped after {MaxCallbacksToLog} callbacks, continuing silent monitoring...)\n");
                 }
             };
 
             // Monitor for a few seconds
-            _log.Info("Monitoring for 5 seconds...\n");
+            _log.Info("Monitoring for 5 seconds...");
             await Task.Delay(5000, cancellationToken);
 
             // Print summary statistics
-            _log.Info("\n=== SUMMARY STATISTICS ===");
+            _log.Info("Buffer statistics:");
             _log.Info($"Total process callbacks: {_callbackCount}");
             
             for (int ch = 0; ch < debugChannels; ch++)
@@ -173,19 +168,19 @@ public class JackRawBufferDebugService(ILog<JackRawBufferDebugService> log) : IJ
                 
                 if (stats.TotalNonZeroSamples == 0)
                 {
-                    _log.Warn($"  ⚠ WARNING: ALL SAMPLES WERE ZERO - No audio detected!");
+                    _log.Warn($"  Warning: All samples were zero - No audio detected!");
                 }
                 else if (stats.TotalNonZeroSamples < stats.TotalSamples * 0.01)
                 {
-                    _log.Warn($"  ⚠ WARNING: Very few non-zero samples - Audio may be very quiet or intermittent");
+                    _log.Warn($"  Warning: Very few non-zero samples - Audio may be very quiet or intermittent");
                 }
                 else
                 {
-                    _log.Info($"  ✓ Audio data detected");
+                    _log.Info($"  Audio data detected");
                 }
             }
 
-            _log.Info("\n=== DIAGNOSIS ===");
+            _log.Info("Diagnosis:");
             bool allChannelsSilent = bufferStats.All(s => s.TotalNonZeroSamples == 0);
             
             if (allChannelsSilent)
@@ -200,11 +195,11 @@ public class JackRawBufferDebugService(ILog<JackRawBufferDebugService> log) : IJ
             }
             else
             {
-                _log.Info("✓ Audio signal detected - buffers contain non-zero data");
+                _log.Info("Audio signal detected - buffers contain data");
                 _log.Info("The Jack audio pipeline is working correctly.");
             }
 
-            _log.Info("\n=== Buffer Inspection Complete ===");
+            _log.Info("Buffer inspection complete");
         }
         catch (Exception ex)
         {

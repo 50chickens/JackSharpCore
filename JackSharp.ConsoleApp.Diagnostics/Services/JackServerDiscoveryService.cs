@@ -108,7 +108,7 @@ public class JackServerDiscoveryService(ILog<JackServerDiscoveryService> log) : 
         {
             using var tempClient = new JackSharp.Controller($"diag_check_{serverName}");
 
-            if (tempClient.Start(startServer: false))
+            if (tempClient.Start(false))
             {
                 serverInfo.IsRunning = true;
                 serverInfo.SampleRate = tempClient.SampleRate;

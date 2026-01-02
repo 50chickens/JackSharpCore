@@ -25,23 +25,16 @@ public class AudioDiagnosticsWorker(
             _log.Info("Audio Diagnostics Worker starting...");
 
             // Step 1: Generate test tone
-            _log.Info("=== STEP 1: Test Tone Generation ===");
             _log.Info("Generating 1000Hz test tone at -6dBFS for 5 seconds on BOTH channels...");
             
-            _testToneService.PlayTestTone(
-                frequencyHz: 1000,
-                amplitudeDbfs: -6.0,
-                durationMs: 5000);
+            _testToneService.PlayTestTone(1000, -6.0, 5000);
 
             await Task.Delay(1000, stoppingToken); // Wait for tone to settle
 
             // Step 2: Measure input levels during silence
-            _log.Info("=== STEP 2: Silence Level Measurement ===");
-            _log.Info("Recording input levels during SILENCE (3 seconds)...");
+            _log.Info("Recording input levels during silence (3 seconds)...");
             
-            var (silenceDbfs, silenceRms) = _levelMeterService.MeasureInputLevels(
-                captureDurationMs: 3000,
-                numChannels: 2);
+            var (silenceDbfs, silenceRms) = _levelMeterService.MeasureInputLevels(3000, 2);
 
             _log.Info("Silence levels recorded:");
             for (int ch = 0; ch < silenceDbfs.Count; ch++)
@@ -52,24 +45,17 @@ public class AudioDiagnosticsWorker(
             await Task.Delay(500, stoppingToken);
 
             // Step 3: Play concurrent test tone and measure
-            _log.Info("=== STEP 3: Test Tone + Measurement (Loopback Verification) ===");
-            _log.Info("Playing 1000Hz test tone WHILE measuring input...");
-            _log.Info("(With loopback cable: output → input, should see ~-6dBFS on input)");
+            _log.Info("Playing 1000Hz test tone WHILE measuring input (loopback test)...");
             
             // Play tone in background
             var toneTask = Task.Run(() =>
             {
-                _testToneService.PlayTestTone(
-                    frequencyHz: 1000,
-                    amplitudeDbfs: -6.0,
-                    durationMs: 5000);
+                _testToneService.PlayTestTone(1000, -6.0, 5000);
             }, stoppingToken);
 
             // Measure while tone plays
             await Task.Delay(1000, stoppingToken); // Let tone start and stabilize
-            var (toneDbfs, toneRms) = _levelMeterService.MeasureInputLevels(
-                captureDurationMs: 4000,
-                numChannels: 2);
+            var (toneDbfs, toneRms) = _levelMeterService.MeasureInputLevels(4000, 2);
 
             _log.Info("Levels with tone:");
             for (int ch = 0; ch < toneDbfs.Count; ch++)
@@ -80,7 +66,7 @@ public class AudioDiagnosticsWorker(
             await toneTask;
 
             // Step 4: Summary and diagnosis
-            _log.Info("=== STEP 4: SUMMARY AND DIAGNOSIS ===");
+            _log.Info("Diagnostics complete - analyzing results...");
             
             bool hasInputSignal = false;
             if (toneDbfs.Any() && silenceDbfs.Any())
@@ -90,14 +76,14 @@ public class AudioDiagnosticsWorker(
 
                 if (signalToNoise > 20.0)
                 {
-                    _log.Info("✓ LOOPBACK VERIFIED: Audio signal detected at input");
+                    _log.Info("Loopback verified - audio signal detected at input");
                     _log.Info("  → Outputs are sending audio");
                     _log.Info("  → Inputs are receiving audio");
                     hasInputSignal = true;
                 }
                 else
                 {
-                    _log.Warn("✗ LOOPBACK ISSUE: Weak or no signal at input");
+                    _log.Warn("Loopback issue - weak or no signal at input");
                     _log.Warn("  → Check loopback cable connections");
                     _log.Warn("  → Check input levels (trim/gain)");
                     _log.Warn("  → Check Jack port connectivity");
@@ -106,7 +92,7 @@ public class AudioDiagnosticsWorker(
 
             if (!hasInputSignal)
             {
-                _log.Error("AUDIO DIAGNOSTICS FAILED: No input signal detected");
+                _log.Error("Audio diagnostics failed: No input signal detected");
                 _log.Error("Recommended troubleshooting:");
                 _log.Error("1. Check physical loopback cable is connected to in/out jacks");
                 _log.Error("2. Run: jack_lsp -c to see all port connections");

@@ -23,7 +23,7 @@ public class JackEnvironmentValidationService(ILog<JackEnvironmentValidationServ
         }
         else
         {
-            _log.Info($"✓ JACK_PROMISCUOUS_SERVER={promiscuousServer}");
+            _log.Info($"Jack Promiscuous Server: {promiscuousServer}");
         }
 
         // Check JACK_NO_AUDIO_RESERVATION environment variable
@@ -35,7 +35,7 @@ public class JackEnvironmentValidationService(ILog<JackEnvironmentValidationServ
         }
         else
         {
-            _log.Info($"✓ JACK_NO_AUDIO_RESERVATION={noAudioReservation}");
+            _log.Info($"Jack No Audio Reservation: {noAudioReservation}");
         }
 
         // Check Jack server name configuration
@@ -46,7 +46,7 @@ public class JackEnvironmentValidationService(ILog<JackEnvironmentValidationServ
         }
         else
         {
-            _log.Info($"✓ Jack ServerName={options.ServerName}");
+            _log.Info($"Jack Server Name: {options.ServerName}");
         }
 
         if (failures.Count > 0)
@@ -55,7 +55,7 @@ public class JackEnvironmentValidationService(ILog<JackEnvironmentValidationServ
             return ValidateOptionsResult.Fail(failures);
         }
 
-        _log.Info("✓ All Jack environment variables validated successfully");
+        _log.Info("Jack environment variables validated successfully");
         return ValidateOptionsResult.Success;
     }
 }

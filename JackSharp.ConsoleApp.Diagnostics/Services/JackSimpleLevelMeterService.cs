@@ -21,12 +21,12 @@ public class JackSimpleLevelMeterService(ILog<JackSimpleLevelMeterService> log, 
     {
         try
         {
-            _log.Info("=== Hardware Input Level Meter (dBFS) ===");
+            _log.Info("Hardware input level meter (dBFS)");
             _log.Info($"Monitoring hardware inputs ({_options.MeasurementDuration}s measurements, {_options.MeasurementCount} readings)...\n");
 
             // Create processor with multiple input ports and autoconnect to physical inputs
             const int maxInputChannels = 16;
-            using var processor = new Processor("SimpleLevelMeter", audioInPorts: maxInputChannels, autoconnect: true);
+            using var processor = new Processor("SimpleLevelMeter", maxInputChannels, 0, 0, 0, true);
 
             if (!processor.Start())
             {
@@ -110,7 +110,7 @@ public class JackSimpleLevelMeterService(ILog<JackSimpleLevelMeterService> log, 
             }
             catch (OperationCanceledException)
             {
-                _log.Info("\nMonitoring stopped by user");
+                _log.Info("Monitoring stopped by user");
             }
         }
         catch (Exception ex)
@@ -124,12 +124,17 @@ public class JackSimpleLevelMeterService(ILog<JackSimpleLevelMeterService> log, 
         // Print header
         var output = "Time: " + DateTime.Now.ToString("HH:mm:ss") + " | ";
 
-        // Display first 8 channels with their dBFS levels, always show them
+        // Display only CONNECTED channels (skip unconnected ones)
         int displayCount = 0;
         for (int ch = 0; ch < accumulators.Count && displayCount < MaxDisplayChannels; ch++)
         {
+            var portName = ch < portNames.Count ? portNames[ch] : $"CH{ch + 1}";
+            
+            // Skip unconnected channels from output
+            if (portName.StartsWith("(unconnected:"))
+                continue;
+
             var db = accumulators[ch].CalculateDb();
-            var portName = ch < portNames.Count && !string.IsNullOrEmpty(portNames[ch]) ? portNames[ch] : $"CH{ch + 1}";
             output += $"{portName}: {db:F1}dBFS | ";
             displayCount++;
         }
@@ -145,7 +150,7 @@ public class JackSimpleLevelMeterService(ILog<JackSimpleLevelMeterService> log, 
     {
         private double _sumSquares = 0.0;
         private long _sampleCount = 0;
-        private const double NoiseFloor = -100.0;
+        private const double NoiseFloor = -150.0;
 
         public void AddSamples(float[] samples)
         {

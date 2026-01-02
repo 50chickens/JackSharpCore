@@ -125,7 +125,7 @@ public class JackConnectionManagerService(
                 _client = new JackSharp.Controller("diagnostics");
                 _log.Info($"Attempting to connect to Jack server '{serverName}'...");
 
-                if (_client.Start(startServer: false))
+                if (_client.Start(false))
                 {
                     _connectedServerName = serverName;
                     status.IsConnected = true;

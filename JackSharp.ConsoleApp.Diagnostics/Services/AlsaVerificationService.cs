@@ -13,7 +13,7 @@ public class AlsaVerificationService(ILog<AlsaVerificationService> log) : IAlsaV
 
     public async Task VerifyAlsaCaptureAsync(CancellationToken cancellationToken)
     {
-        _log.Info("=== ALSA Hardware Verification ===\n");
+        _log.Info("Verifying ALSA hardware");
 
         // Check if Jack is using the device
         await CheckJackStatus();
@@ -27,7 +27,7 @@ public class AlsaVerificationService(ILog<AlsaVerificationService> log) : IAlsaV
         // Attempt to record a short sample
         await AttemptTestRecording(cancellationToken);
 
-        _log.Info("\n=== ALSA Verification Complete ===");
+        _log.Info("ALSA verification complete");
     }
 
     private async Task CheckJackStatus()
@@ -39,13 +39,13 @@ public class AlsaVerificationService(ILog<AlsaVerificationService> log) : IAlsaV
             
             if (result.exitCode == 0 && result.output.Trim() == "active")
             {
-                _log.Info("✓ Jack service is running");
+                _log.Info("Jack service is running");
                 _log.Info("  Note: Jack has exclusive access to the audio device");
-                _log.Info("  ALSA tools may report 'device busy' - this is expected\n");
+                _log.Info("  ALSA tools may report 'device busy' - this is expected");
             }
             else
             {
-                _log.Info("✗ Jack service is not running\n");
+                _log.Info("Jack service is not running");
             }
         }
         catch (Exception ex)
@@ -72,7 +72,7 @@ public class AlsaVerificationService(ILog<AlsaVerificationService> log) : IAlsaV
             }
 
             // Show PCM devices
-            _log.Info("\nPCM Devices:");
+            _log.Info("PCM Devices:");
             var pcmResult = await RunCommandAsync("aplay", "-l");
             if (pcmResult.exitCode == 0)
             {
@@ -81,8 +81,6 @@ public class AlsaVerificationService(ILog<AlsaVerificationService> log) : IAlsaV
                     _log.Info($"  {line}");
                 }
             }
-
-            _log.Info("");
         }
         catch (Exception ex)
         {
@@ -122,17 +120,17 @@ public class AlsaVerificationService(ILog<AlsaVerificationService> log) : IAlsaV
                                 {
                                     if (percent < 10)
                                     {
-                                        _log.Warn($"\n  ⚠ WARNING: ADC capture level is very low ({percent}%)");
+                                        _log.Warn($"  Warning: Audio drive capture level is very low ({percent}%)");
                                         _log.Warn("  This may result in weak or no audio signal");
                                         _log.Warn("  Consider increasing with: amixer -c 0 set ADC 50%");
                                     }
                                     else if (percent < 30)
                                     {
-                                        _log.Warn($"\n  ⚠ Note: ADC capture level is relatively low ({percent}%)");
+                                        _log.Warn($"  Note: Audio drive capture level is relatively low ({percent}%)");
                                     }
                                     else
                                     {
-                                        _log.Info($"\n  ✓ ADC capture level: {percent}%");
+                                        _log.Info($"  Audio drive capture level: {percent}%");
                                     }
                                 }
                             }
@@ -144,8 +142,6 @@ public class AlsaVerificationService(ILog<AlsaVerificationService> log) : IAlsaV
             {
                 _log.Warn($"Could not read mixer settings (exit code: {result.exitCode})");
             }
-
-            _log.Info("");
         }
         catch (Exception ex)
         {
@@ -171,7 +167,7 @@ public class AlsaVerificationService(ILog<AlsaVerificationService> log) : IAlsaV
 
             if (result.exitCode == 0)
             {
-                _log.Info("✓ Successfully recorded test file via ALSA");
+                _log.Info("Successfully recorded test file via ALSA");
                 
                 // Check file size
                 if (File.Exists(tempFile))
@@ -181,11 +177,11 @@ public class AlsaVerificationService(ILog<AlsaVerificationService> log) : IAlsaV
                     
                     if (fileInfo.Length > 1000)
                     {
-                        _log.Info("  ✓ File contains data - ALSA capture is working");
+                        _log.Info("  File contains data - ALSA capture is working");
                     }
                     else
                     {
-                        _log.Warn("  ⚠ File is very small - may not contain valid audio");
+                        _log.Warn("  Note: File is very small - may not contain valid audio");
                     }
                     
                     // Cleanup
@@ -194,7 +190,7 @@ public class AlsaVerificationService(ILog<AlsaVerificationService> log) : IAlsaV
             }
             else
             {
-                _log.Info($"✗ Could not record via ALSA (exit code: {result.exitCode})");
+                _log.Info($"Could not record via audio driver (exit code: {result.exitCode})");
                 
                 if (result.output.Contains("busy") || result.output.Contains("Device or resource busy"))
                 {
@@ -206,8 +202,6 @@ public class AlsaVerificationService(ILog<AlsaVerificationService> log) : IAlsaV
                     _log.Warn($"  Error: {result.output}");
                 }
             }
-
-            _log.Info("");
         }
         catch (Exception ex)
         {

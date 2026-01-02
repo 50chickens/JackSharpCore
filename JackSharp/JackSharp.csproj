@@ -10,5 +10,6 @@
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<Description>.NET Core bindings for Jack Audio</Description>
+		<NoWarn>$(NoWarn);CS0649</NoWarn>
 	</PropertyGroup>
 </Project>

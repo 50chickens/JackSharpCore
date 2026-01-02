@@ -37,7 +37,7 @@ public static class ContainerBuilder
         args ??= [];
 
         // Add configuration for environment
-        builder.Configuration.AddEnvironmentVariables(prefix: "JACK_");
+        builder.Configuration.AddEnvironmentVariables("JACK_");
 
         // Register options
         builder.Services.AddOptions<JackOptions>()
@@ -77,7 +77,41 @@ public static class ContainerBuilder
         builder.Services.AddSingleton<IJackSimpleLevelMeterService, JackSimpleLevelMeterService>();
         builder.Services.AddSingleton<IJackRawBufferDebugService, JackRawBufferDebugService>();
         builder.Services.AddSingleton<IAlsaVerificationService, AlsaVerificationService>();
-        builder.Services.AddHostedService<SimpleLevelMeterWorker>();
+        builder.Services.AddSingleton<AudioQualityAnalysisService>();
+        builder.Services.AddSingleton<LoopbackTestService>();
+        builder.Services.AddSingleton<NoiseFloorOptimizationService>();
+        builder.Services.AddSingleton<AudioDiagnosticsWorker>();
         
+        // Register the main diagnostics worker with command-line arguments
+        builder.Services.AddHostedService<DiagnosticsWorker>(sp =>
+        {
+            var log = sp.GetRequiredService<ILog<DiagnosticsWorker>>();
+            var discoveryService = sp.GetRequiredService<IJackServerDiscoveryService>();
+            var connectionManager = sp.GetRequiredService<IJackConnectionManagerService>();
+            var simpleLevelMeterService = sp.GetRequiredService<IJackSimpleLevelMeterService>();
+            var hardwareInputMonitorService = sp.GetRequiredService<IJackHardwareInputMonitorService>();
+            var audioDiagnosticsWorker = sp.GetRequiredService<AudioDiagnosticsWorker>();
+            var audioQualityAnalysisService = sp.GetRequiredService<AudioQualityAnalysisService>();
+            var loopbackTestService = sp.GetRequiredService<LoopbackTestService>();
+            var alsaVerificationService = sp.GetRequiredService<IAlsaVerificationService>();
+            var rawBufferDebugService = sp.GetRequiredService<IJackRawBufferDebugService>();
+            var noiseFloorOptimizationService = sp.GetRequiredService<NoiseFloorOptimizationService>();
+            var lifetime = sp.GetRequiredService<IHostApplicationLifetime>();
+
+            return new DiagnosticsWorker(
+                log,
+                discoveryService,
+                connectionManager,
+                simpleLevelMeterService,
+                hardwareInputMonitorService,
+                audioDiagnosticsWorker,
+                audioQualityAnalysisService,
+                loopbackTestService,
+                alsaVerificationService,
+                rawBufferDebugService,
+                noiseFloorOptimizationService,
+                lifetime,
+                args);
+        });
     }
 }

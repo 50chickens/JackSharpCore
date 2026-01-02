@@ -18,13 +18,13 @@ public class JackHardwareInputMonitorService(ILog<JackHardwareInputMonitorServic
     {
         try
         {
-            _log.Info("=== Hardware Input Level Monitor ===");
-            _log.Info("Connecting to Jack and monitoring physical inputs...\n");
+            _log.Info("Monitoring hardware input levels");
+            _log.Info("Connecting to Jack and monitoring physical inputs...");
 
             // Create processor with multiple input ports and autoconnect to physical inputs
             // Typical systems have 2-8 hardware inputs
             const int maxInputChannels = 16;
-            using var processor = new Processor("HWInputMonitor", audioInPorts: maxInputChannels, autoconnect: true);
+            using var processor = new Processor("HWInputMonitor", maxInputChannels, 0, 0, 0, true);
 
             if (!processor.Start())
             {
@@ -82,7 +82,7 @@ public class JackHardwareInputMonitorService(ILog<JackHardwareInputMonitorServic
             }
             catch (OperationCanceledException)
             {
-                _log.Info("\nMonitoring stopped");
+                _log.Info("Monitoring stopped");
             }
         }
         catch (Exception ex)
