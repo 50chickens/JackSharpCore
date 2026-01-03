@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using JackSharp.Processing;
 using JackSharp.ConsoleApp.Diagnostics.Logging;
 using System.Diagnostics;
 
@@ -29,15 +23,25 @@ public class LoopbackTestService(ILog<LoopbackTestService> log)
                 // Quick connectivity check before full test
                 _log.Info("Performing cable connectivity check (1kHz test tone)...");
                 bool leftConnected = await QuickConnectivityTestAsync("Left", 0, 1, 1000.0, cancellationToken);
-                bool rightConnected = await QuickConnectivityTestAsync("Right", 1, 3, 1000.0, cancellationToken);
-                
-                if (!leftConnected || !rightConnected)
+                bool leftWasTested = false;
+                if (leftConnected)
                 {
-                    _log.Error("Loopback cables not connected or not working properly!");
-                    _log.Error("Please verify: left output → left input, right output → right input");
+                    leftWasTested = true;
+                    await TestChannelAsync("Left", 0, 0, cancellationToken);
+                } 
+                bool rightWasTested = false;
+                bool rightConnected = await QuickConnectivityTestAsync("Right", 1, 3, 1000.0, cancellationToken);
+                if (rightConnected)
+                {
+                    rightWasTested = true;
+                    await TestChannelAsync("Right", 1, 1, cancellationToken);
+                    
+                }
+                if (!leftWasTested && !rightWasTested)
+                {
+                    _log.Info("No cable connectivity detected on either channel. Please check your loopback cables and try again.");
                     return;
                 }
-                
                 _log.Info("Cable connectivity verified. Running full frequency sweep...");
         }
         catch (Exception ex)
@@ -233,7 +237,7 @@ public class LoopbackTestService(ILog<LoopbackTestService> log)
                 var thdDiff = capturedAnalysis.Thd - refAnalysis.Thd;
 
                 var status = Math.Abs(levelDiff) < 0.5 && Math.Abs(peakDiff) < 1.0 && capturedAnalysis.Thd < 1.0 ? "PASS" : "FAIL";
-                _log.Info($"  {frequency:F0}Hz: {status} | Lvl={levelDiff:+0.00;-0.00;0.00}dB, Peak={peakDiff:+0.00;-0.00;0.00}dB, THD={capturedAnalysis.Thd:F2}%");
+                _log.Info($"  {frequency:F0}Hz: {status} | RefLevel={refAnalysis.RmsDb:F1}dB RefPeak={refAnalysis.PeakDb:F1}dB | OutLevel={capturedAnalysis.RmsDb:F1}dB OutPeak={capturedAnalysis.PeakDb:F1}dB | ΔLvl={levelDiff:+0.00;-0.00;0.00}dB ΔPeak={peakDiff:+0.00;-0.00;0.00}dB THD={capturedAnalysis.Thd:F2}%");
 
                 results.Add(new ChannelResult
                 {

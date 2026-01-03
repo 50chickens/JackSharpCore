@@ -25,8 +25,8 @@ public class NoiseFloorOptimizationService(ILog<NoiseFloorOptimizationService> l
         {
             _log.Info("Optimizing noise floor by testing ALSA mixer settings");
 
-            // Use provided target or default to -9 dBFS
-            var targetDb = targetSignalDb ?? -9.0;
+            // Use provided target or default to -12 dBFS
+            var targetDb = targetSignalDb ?? -12;
             _log.Info($"Target Signal Level: {targetDb:F1}dBFS\n");
 
             _log.Info("IMPORTANT: Ensure 0.77V RMS sine wave is connected to right channel!");
@@ -174,6 +174,13 @@ public class NoiseFloorOptimizationService(ILog<NoiseFloorOptimizationService> l
                     _log.Info($"  amixer cset numid=21 {bestAdc.Volume}");
                 if (betterPgaFound)
                     _log.Info($"  amixer cset numid=26 {bestPga.Gain:F1}\n");
+                //add log messages to give commands to revert back to original settings
+                _log.Info("\nTo revert back to original settings, run the following commands:");
+                _log.Info($"  amixer cset numid=21 {baseline.AdcCaptureVolume}");
+                _log.Info($"  amixer cset numid=26 {baseline.PgaGainRight:F1}\n");
+                _log.Info($"  amixer cset numid=25 {baseline.PgaGainLeft:F1}\n");
+
+                
             }
             else
             {
