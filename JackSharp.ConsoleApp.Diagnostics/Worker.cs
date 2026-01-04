@@ -15,7 +15,6 @@ public class DiagnosticsWorker(
     IJackSimpleLevelMeterService simpleLevelMeterService,
     IJackHardwareInputMonitorService hardwareInputMonitorService,
     LoopbackTestService loopbackTestService,
-    IJackRawBufferDebugService rawBufferDebugService,
     IHostApplicationLifetime lifetime,
     string[] args) : BackgroundService
 {
