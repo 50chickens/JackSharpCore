@@ -1,3 +1,4 @@
+using JackSharp.ConsoleApp.Diagnostics.Interfaces;
 using JackSharp.ConsoleApp.Diagnostics.Logging;
 using JackSharp.ConsoleApp.Diagnostics.Services;
 
@@ -13,12 +14,8 @@ public class DiagnosticsWorker(
     IJackConnectionManagerService connectionManager,
     IJackSimpleLevelMeterService simpleLevelMeterService,
     IJackHardwareInputMonitorService hardwareInputMonitorService,
-    AudioDiagnosticsWorker audioDiagnosticsWorker,
-    AudioQualityAnalysisService audioQualityAnalysisService,
     LoopbackTestService loopbackTestService,
-    IAlsaVerificationService alsaVerificationService,
     IJackRawBufferDebugService rawBufferDebugService,
-    NoiseFloorOptimizationService noiseFloorOptimizationService,
     IHostApplicationLifetime lifetime,
     string[] args) : BackgroundService
 {
@@ -59,37 +56,8 @@ public class DiagnosticsWorker(
                     _log.Info("Audio test diagnostics would run here");
                     break;
 
-                case JackDiagnosticsType.AudioQualityAnalysis:
-                    await audioQualityAnalysisService.AnalyzeAudioQualityAsync(1000.0, 5, stoppingToken);
-                    break;
-
                 case JackDiagnosticsType.LoopbackTest:
                     await loopbackTestService.RunLoopbackTestAsync(stoppingToken);
-                    break;
-
-                case JackDiagnosticsType.ComprehensiveDebug:
-                    await ComprehensiveDebugAsync(alsaVerificationService, rawBufferDebugService, stoppingToken);
-                    break;
-
-                case JackDiagnosticsType.RawBufferDebug:
-                    await rawBufferDebugService.InspectBuffersAsync(stoppingToken);
-                    break;
-
-                case JackDiagnosticsType.NoiseFloorOptimization:
-                    // Parse optional target dBFS level from arguments
-                    double? targetDb = null;
-                    if (args.Length > 1)
-                    {
-                        foreach (var arg in args)
-                        {
-                            if (arg.StartsWith("--target-db=") && double.TryParse(arg.Substring("--target-db=".Length), out var db))
-                            {
-                                targetDb = db;
-                                break;
-                            }
-                        }
-                    }
-                    await noiseFloorOptimizationService.OptimizeNoiseFloorAsync(stoppingToken, targetDb);
                     break;
 
                 default:
@@ -118,9 +86,6 @@ public class DiagnosticsWorker(
             _ when argString.Contains("--audio-test") => JackDiagnosticsType.AudioTest,
             _ when argString.Contains("--audio-quality") => JackDiagnosticsType.AudioQualityAnalysis,
             _ when argString.Contains("--loopback") => JackDiagnosticsType.LoopbackTest,
-            _ when argString.Contains("--noise-floor") => JackDiagnosticsType.NoiseFloorOptimization,
-            _ when argString.Contains("--debug") => JackDiagnosticsType.ComprehensiveDebug,
-            _ when argString.Contains("--raw-buffer") => JackDiagnosticsType.RawBufferDebug,
             _ => JackDiagnosticsType.ServerDiscovery
         };
     }
@@ -179,21 +144,6 @@ public class DiagnosticsWorker(
         {
             _log.Warn($"Connection failed: {connectionStatus.ErrorMessage}");
         }
-    }
-
-    private async Task ComprehensiveDebugAsync(IAlsaVerificationService alsaService, IJackRawBufferDebugService bufferDebugService, CancellationToken cancellationToken)
-    {
-        _log.Info("COMPREHENSIVE AUDIO DEBUGGING TOOL");
-
-        _log.Info("STEP 1: ALSA Hardware Layer Verification");
-        await alsaService.VerifyAlsaCaptureAsync(cancellationToken);
-
-        await Task.Delay(1000, cancellationToken);
-
-        _log.Info("Inspecting Jack audio buffers");
-        await bufferDebugService.InspectBuffersAsync(cancellationToken);
-
-        _log.Info("Debugging complete");
     }
 }
 

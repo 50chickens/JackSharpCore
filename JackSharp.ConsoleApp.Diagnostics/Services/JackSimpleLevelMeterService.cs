@@ -1,6 +1,6 @@
+using JackSharp.ConsoleApp.Diagnostics.Interfaces;
 using JackSharp.ConsoleApp.Diagnostics.Logging;
 using JackSharp.ConsoleApp.Diagnostics.Options;
-using JackSharp.Processing;
 using JackSharp.Ports;
 using Microsoft.Extensions.Options;
 
@@ -78,7 +78,7 @@ public class JackSimpleLevelMeterService(ILog<JackSimpleLevelMeterService> log, 
                     {
                         PrintLevels(accumulators, portNames);
                         readingCount++;
-                        
+
                         // Stop after specified number of readings
                         if (readingCount >= _options.MeasurementCount)
                         {
@@ -129,7 +129,7 @@ public class JackSimpleLevelMeterService(ILog<JackSimpleLevelMeterService> log, 
         for (int ch = 0; ch < accumulators.Count && displayCount < MaxDisplayChannels; ch++)
         {
             var portName = ch < portNames.Count ? portNames[ch] : $"CH{ch + 1}";
-            
+
             // Skip unconnected channels from output
             if (portName.StartsWith("(unconnected:"))
                 continue;
@@ -187,16 +187,16 @@ public class JackSimpleLevelMeterService(ILog<JackSimpleLevelMeterService> log, 
     private List<string> GetConnectedPortNames(Processor processor, int channelCount)
     {
         var portNames = new List<string>();
-        
+
         try
         {
             var audioInPorts = processor.AudioInPorts.ToList();
-            
+
             for (int i = 0; i < channelCount && i < audioInPorts.Count; i++)
             {
                 var port = audioInPorts[i];
                 string connectedPortName = PortConnectionHelper.GetUpstreamConnectedPortName(port);
-                
+
                 if (!string.IsNullOrEmpty(connectedPortName))
                 {
                     portNames.Add(connectedPortName);
@@ -221,13 +221,5 @@ public class JackSimpleLevelMeterService(ILog<JackSimpleLevelMeterService> log, 
         }
 
         return portNames;
-    }
-    /// <summary>
-    /// Gets the name of the port connected to the input of the given port (upstream port).
-    /// This is the actual hardware port like "system:capture_1".
-    /// </summary>
-    private string GetUpstreamConnectedPort(JackSharp.Ports.Port port)
-    {
-        return PortConnectionHelper.GetUpstreamConnectedPortName(port);
     }
 }

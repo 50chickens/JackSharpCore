@@ -36,7 +36,7 @@ public class AudioStreamGenerator
         {
             samples[i] = amplitude * MathF.Sin(_phase);
             _phase += phaseIncrement;
-            
+
             // Keep phase in valid range to prevent numerical issues
             if (_phase > TwoPi)
             {

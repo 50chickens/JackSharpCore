@@ -1,7 +1,6 @@
 using JackSharp.ConsoleApp.Diagnostics.Services;
-using Microsoft.Extensions.Hosting;
 
-namespace JackSharp.ConsoleApp.Diagnostics;
+namespace JackSharp.ConsoleApp.Diagnostics.Workers;
 
 /// <summary>
 /// Worker for audio quality analysis via command-line option.

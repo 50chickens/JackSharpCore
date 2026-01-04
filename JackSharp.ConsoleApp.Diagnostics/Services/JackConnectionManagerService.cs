@@ -1,3 +1,4 @@
+using JackSharp.ConsoleApp.Diagnostics.Interfaces;
 using JackSharp.ConsoleApp.Diagnostics.Logging;
 using Microsoft.Extensions.Options;
 
@@ -16,7 +17,7 @@ public class JackOptions
 /// Implementation of Jack connection manager
 /// </summary>
 public class JackConnectionManagerService(
-    ILog<JackConnectionManagerService> log, 
+    ILog<JackConnectionManagerService> log,
     IOptions<JackOptions> options,
     IJackServerDiscoveryService discoveryService) : IJackConnectionManagerService, IDisposable
 {

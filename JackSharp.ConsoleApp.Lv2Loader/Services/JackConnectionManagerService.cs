@@ -16,7 +16,7 @@ public class JackOptions
 /// Implementation of Jack connection manager
 /// </summary>
 public class JackConnectionManagerService(
-    ILog<JackConnectionManagerService> log, 
+    ILog<JackConnectionManagerService> log,
     IOptions<JackOptions> options,
     IJackServerDiscoveryService discoveryService) : IJackConnectionManagerService, IDisposable
 {

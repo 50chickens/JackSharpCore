@@ -1,7 +1,7 @@
+using JackSharp.ConsoleApp.Diagnostics.Interfaces;
 using JackSharp.ConsoleApp.Diagnostics.Logging;
-using JackSharp.ConsoleApp.Diagnostics.Services;
 
-namespace JackSharp.ConsoleApp.Diagnostics;
+namespace JackSharp.ConsoleApp.Diagnostics.Workers;
 
 /// <summary>
 /// Worker for simple continuous hardware input level monitoring.

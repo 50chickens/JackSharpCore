@@ -1,3 +1,4 @@
+using JackSharp.ConsoleApp.Diagnostics.Interfaces;
 using JackSharp.ConsoleApp.Diagnostics.Logging;
 using JackSharp.ConsoleApp.Diagnostics.Options;
 using JackSharp.ConsoleApp.Diagnostics.Services;
@@ -81,7 +82,7 @@ public static class ContainerBuilder
         builder.Services.AddSingleton<LoopbackTestService>();
         builder.Services.AddSingleton<NoiseFloorOptimizationService>();
         builder.Services.AddSingleton<AudioDiagnosticsWorker>();
-        
+
         // Register the main diagnostics worker with command-line arguments
         builder.Services.AddHostedService<DiagnosticsWorker>(sp =>
         {

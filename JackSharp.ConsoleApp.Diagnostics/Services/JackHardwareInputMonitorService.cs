@@ -1,6 +1,5 @@
+using JackSharp.ConsoleApp.Diagnostics.Interfaces;
 using JackSharp.ConsoleApp.Diagnostics.Logging;
-using JackSharp.Processing;
-using System.Diagnostics;
 
 namespace JackSharp.ConsoleApp.Diagnostics.Services;
 
@@ -139,7 +138,7 @@ public class JackHardwareInputMonitorService(ILog<JackHardwareInputMonitorServic
         {
             var db = accumulators[ch].CalculateDb();
             var meterSize = IecScale(db, MeterWidth);
-            
+
             output += $"CH{ch + 1:D2} ";
 
             for (int i = 0; i < meterSize - 1; i++)

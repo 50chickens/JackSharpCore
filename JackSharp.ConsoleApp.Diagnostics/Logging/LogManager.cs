@@ -1,5 +1,3 @@
-using JackSharp.ConsoleApp.Diagnostics.Logging;
-
 namespace JackSharp.ConsoleApp.Diagnostics.Logging
 {
     /// <summary>

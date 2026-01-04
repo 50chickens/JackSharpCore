@@ -1,5 +1,5 @@
-using System.Runtime.InteropServices;
 using JackSharp.ConsoleApp.Lv2Loader.Logging;
+using System.Runtime.InteropServices;
 
 namespace JackSharp.ConsoleApp.Lv2Loader.Services;
 

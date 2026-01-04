@@ -1,6 +1,4 @@
 using JackSharp.ConsoleApp.Diagnostics.Logging;
-using JackSharp.Processing;
-using System.Threading;
 
 namespace JackSharp.ConsoleApp.Diagnostics.Services;
 
@@ -38,7 +36,7 @@ public class JackAudioLevelMeterService(ILog<JackAudioLevelMeterService> log) : 
 
             // Create a processor with input ports and autoconnect to physical inputs
             using var processor = new JackSharp.Processor("AudioLevelMeter", numChannels, 0, 0, 0, true);
-            
+
             if (!processor.Start())
             {
                 _log.Error("Failed to connect to Jack");
@@ -149,7 +147,7 @@ public class JackAudioLevelMeterService(ILog<JackAudioLevelMeterService> log) : 
             {
                 double rms = Math.Sqrt((double)_sumSq[ch] / _sampleCount) / maxAmp;
                 rmsList.Add(rms);
-                
+
                 // Check for NaN (occurs when _sumSq[ch] is 0)
                 if (double.IsNaN(rms) || rms <= 0)
                 {

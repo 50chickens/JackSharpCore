@@ -1,4 +1,4 @@
-namespace JackSharp.ConsoleApp.Diagnostics.Services;
+namespace JackSharp.ConsoleApp.Diagnostics.Interfaces;
 
 /// <summary>
 /// Service for monitoring hardware input levels, similar to jack_meter.

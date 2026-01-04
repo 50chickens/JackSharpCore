@@ -18,31 +18,31 @@ public class LoopbackTestService(ILog<LoopbackTestService> log)
         {
             _log.Info("Loopback Test: Verifying signal fidelity through hardware chain");
 
-                _log.Info("Loopback Test - Signal levels and distortion:");
-                
-                // Quick connectivity check before full test
-                _log.Info("Performing cable connectivity check (1kHz test tone)...");
-                bool leftConnected = await QuickConnectivityTestAsync("Left", 0, 1, 1000.0, cancellationToken);
-                bool leftWasTested = false;
-                if (leftConnected)
-                {
-                    leftWasTested = true;
-                    await TestChannelAsync("Left", 0, 0, cancellationToken);
-                } 
-                bool rightWasTested = false;
-                bool rightConnected = await QuickConnectivityTestAsync("Right", 1, 3, 1000.0, cancellationToken);
-                if (rightConnected)
-                {
-                    rightWasTested = true;
-                    await TestChannelAsync("Right", 1, 1, cancellationToken);
-                    
-                }
-                if (!leftWasTested && !rightWasTested)
-                {
-                    _log.Info("No cable connectivity detected on either channel. Please check your loopback cables and try again.");
-                    return;
-                }
-                _log.Info("Cable connectivity verified. Running full frequency sweep...");
+            _log.Info("Loopback Test - Signal levels and distortion:");
+
+            // Quick connectivity check before full test
+            _log.Info("Performing cable connectivity check (1kHz test tone)...");
+            bool leftConnected = await QuickConnectivityTestAsync("Left", 0, 1, 1000.0, cancellationToken);
+            bool leftWasTested = false;
+            if (leftConnected)
+            {
+                leftWasTested = true;
+                await TestChannelAsync("Left", 0, 0, cancellationToken);
+            }
+            bool rightWasTested = false;
+            bool rightConnected = await QuickConnectivityTestAsync("Right", 1, 3, 1000.0, cancellationToken);
+            if (rightConnected)
+            {
+                rightWasTested = true;
+                await TestChannelAsync("Right", 1, 1, cancellationToken);
+
+            }
+            if (!leftWasTested && !rightWasTested)
+            {
+                _log.Info("No cable connectivity detected on either channel. Please check your loopback cables and try again.");
+                return;
+            }
+            _log.Info("Cable connectivity verified. Running full frequency sweep...");
         }
         catch (Exception ex)
         {
@@ -163,11 +163,11 @@ public class LoopbackTestService(ILog<LoopbackTestService> log)
         // Connect Jack processor output to ALSA hardware playback using jack_connect command
         string playbackPort = playoutChannel == 0 ? "system:playback_1" : "system:playback_2";
         string processorPlayoutPort = $"LoopbackTest:audioout_{playoutChannel + 1}";
-        
+
         // Connect ALSA hardware capture to Jack processor input  
         string capturePort = playoutChannel == 0 ? "system:capture_1" : "system:capture_2";
         string processorCapturePort = $"LoopbackTest:audioin_{captureChannel + 1}";
-        
+
         // Use jack_connect command-line tool to establish port connections
         ConnectJackPorts(processorPlayoutPort, playbackPort);
         ConnectJackPorts(capturePort, processorCapturePort);

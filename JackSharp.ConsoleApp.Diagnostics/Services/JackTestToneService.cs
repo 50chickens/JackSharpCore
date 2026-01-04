@@ -70,7 +70,7 @@ public class JackTestToneService(ILog<JackTestToneService> log) : IJackTestToneS
                     {
                         var audioBuffer = buffer.AudioOut[ch];
                         var samples = audioBuffer.Audio;
-                        
+
                         for (int i = 0; i < samples.Length; i++)
                         {
                             samples[i] = (float)(amplitude * Math.Sin(phase[ch]));
@@ -79,7 +79,7 @@ public class JackTestToneService(ILog<JackTestToneService> log) : IJackTestToneS
                                 phase[ch] -= 2.0 * Math.PI;
                         }
                     }
-                    
+
                     Interlocked.Add(ref totalWritten, buffer.Frames);
                 }
             };

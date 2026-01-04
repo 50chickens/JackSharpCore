@@ -1,5 +1,3 @@
-using JackSharp.ConsoleApp.Lv2Loader.Logging;
-
 namespace JackSharp.ConsoleApp.Lv2Loader.Logging
 {
     /// <summary>

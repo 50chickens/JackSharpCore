@@ -1,5 +1,4 @@
 using JackSharp.ConsoleApp.Lv2Loader.Logging;
-using JackSharp.ConsoleApp.Lv2Loader.Options;
 using JackSharp.ConsoleApp.Lv2Loader.Services;
 using Microsoft.Extensions.Options;
 using NLog.Extensions.Logging;
@@ -64,7 +63,7 @@ public static class ContainerBuilder
         builder.Services.AddSingleton<IJackConnectionManagerService, JackConnectionManagerService>();
 
         // Register LV2 plugin services
-        builder.Services.AddSingleton<ILv2PluginService, Lv2PluginServiceImpl>();
+        builder.Services.AddSingleton<ILv2PluginService, Lv2PluginService>();
         builder.Services.AddSingleton<ILv2AudioProcessingService, Lv2AudioProcessingService>();
 
         // Register worker

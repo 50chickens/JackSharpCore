@@ -24,11 +24,5 @@ public enum JackDiagnosticsType
     LoopbackTest,
 
     /// <summary>Comprehensive debug with ALSA and buffer inspection</summary>
-    ComprehensiveDebug,
-
-    /// <summary>Raw buffer debug inspection</summary>
-    RawBufferDebug,
-
-    /// <summary>Noise floor optimization - test ALSA settings for minimal noise</summary>
-    NoiseFloorOptimization
+    ComprehensiveDebug
 }

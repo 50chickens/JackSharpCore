@@ -1,4 +1,4 @@
-namespace JackSharp.ConsoleApp.Diagnostics.Services;
+namespace JackSharp.ConsoleApp.Diagnostics.Interfaces;
 
 /// <summary>
 /// Connection status information for Jack server

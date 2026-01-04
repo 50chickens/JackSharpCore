@@ -1,4 +1,4 @@
-namespace JackSharp.ConsoleApp.Diagnostics.Services;
+namespace JackSharp.ConsoleApp.Diagnostics.Interfaces;
 
 /// <summary>
 /// Service for continuously monitoring and printing hardware input dBFS levels.

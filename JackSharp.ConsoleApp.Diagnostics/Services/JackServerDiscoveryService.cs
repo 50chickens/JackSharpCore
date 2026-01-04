@@ -1,3 +1,4 @@
+using JackSharp.ConsoleApp.Diagnostics.Interfaces;
 using JackSharp.ConsoleApp.Diagnostics.Logging;
 
 namespace JackSharp.ConsoleApp.Diagnostics.Services;
@@ -106,7 +107,7 @@ public class JackServerDiscoveryService(ILog<JackServerDiscoveryService> log) : 
 
         try
         {
-            using var tempClient = new JackSharp.Controller($"diag_check_{serverName}");
+            using var tempClient = new Controller($"diag_check_{serverName}");
 
             if (tempClient.Start(false))
             {
