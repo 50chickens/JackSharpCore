@@ -20,56 +20,56 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-using System.Linq;
 using JackSharp;
 using NUnit.Framework;
+using System.Linq;
 using Assert = NUnit.Framework.Legacy.ClassicAssert;
 
 namespace JackSharpTest
 {
-	[TestFixture]
-	public class PortTest
-	{
-		static Processor _client;
+    [TestFixture]
+    public class PortTest
+    {
+        static Processor _client;
 
-		[SetUp]
-		public static void CreateClient ()
-		{
-			_client = new Processor ("testPorts", 2, 4, 1, 3);
-		}
+        [SetUp]
+        public static void CreateClient()
+        {
+            _client = new Processor("testPorts", 2, 4, 1, 3);
+        }
 
-		[Test]
-		public virtual void AudioInPortsAreCreated ()
-		{
-			_client.Start ();
-			Assert.AreEqual (2, _client.AudioInPorts.Count ());
-		}
+        [Test]
+        public virtual void AudioInPortsAreCreated()
+        {
+            _client.Start();
+            Assert.AreEqual(2, _client.AudioInPorts.Count());
+        }
 
-		[Test]
-		public virtual void AudioOutPortsAreCreated ()
-		{
-			_client.Start ();
-			Assert.AreEqual (4, _client.AudioOutPorts.Count ());
-		}
+        [Test]
+        public virtual void AudioOutPortsAreCreated()
+        {
+            _client.Start();
+            Assert.AreEqual(4, _client.AudioOutPorts.Count());
+        }
 
-		[Test]
-		public virtual void MidiInPortsAreCreated ()
-		{
-			_client.Start ();
-			Assert.AreEqual (1, _client.MidiInPorts.Count ());
-		}
+        [Test]
+        public virtual void MidiInPortsAreCreated()
+        {
+            _client.Start();
+            Assert.AreEqual(1, _client.MidiInPorts.Count());
+        }
 
-		[Test]
-		public virtual void MidiOutPortsAreCreated ()
-		{
-			_client.Start ();
-			Assert.AreEqual (3, _client.MidiOutPorts.Count ());
-		}
+        [Test]
+        public virtual void MidiOutPortsAreCreated()
+        {
+            _client.Start();
+            Assert.AreEqual(3, _client.MidiOutPorts.Count());
+        }
 
-		[TearDown]
-		public static void DestroyClient ()
-		{
-			_client.Dispose ();
-		}
-	}
+        [TearDown]
+        public static void DestroyClient()
+        {
+            _client.Dispose();
+        }
+    }
 }

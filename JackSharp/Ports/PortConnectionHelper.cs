@@ -1,7 +1,7 @@
 // Helper for getting connected port information
+using JackSharp.ApiWrapper;
 using System;
 using System.Runtime.InteropServices;
-using JackSharp.ApiWrapper;
 
 namespace JackSharp.Ports
 {
@@ -24,7 +24,7 @@ namespace JackSharp.Ports
             {
                 // Get all connections to this port
                 var connections = PortApi.GetAllConnections(port._jackClient, port._port);
-                
+
                 if (connections == IntPtr.Zero)
                     return null;
 
@@ -37,10 +37,10 @@ namespace JackSharp.Ports
                 }
 
                 string upstreamPortName = Marshal.PtrToStringAnsi(firstConnection);
-                
+
                 // Free the connections array
                 jack_free(connections);
-                
+
                 return upstreamPortName;
             }
             catch

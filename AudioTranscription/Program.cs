@@ -1,8 +1,6 @@
 ﻿using Jack.NAudio;
 using JackSharp;
-using NAudio;
 using NAudio.Wave;
-using NAudio.Wave.SampleProviders;
 
 System.Console.WriteLine("Recording");
 
@@ -13,10 +11,12 @@ using var audioOut = new AudioOut(clientOut);
 
 var waveOutFile = new WaveFileWriter("test.wav", WaveFormat.CreateIeeeFloatWaveFormat(44100, 2));
 
-audioIn.DataAvailable += (s,e) => {
+audioIn.DataAvailable += (s, e) =>
+{
     waveOutFile.Write(e.Buffer, 0, e.BytesRecorded);
 };
-audioIn.RecordingStopped += (s,e) => {
+audioIn.RecordingStopped += (s, e) =>
+{
     Console.WriteLine("Recording Stopped");
     waveOutFile.Flush();
     waveOutFile.Dispose();

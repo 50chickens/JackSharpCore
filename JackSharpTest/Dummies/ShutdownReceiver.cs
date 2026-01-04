@@ -24,18 +24,18 @@ using System;
 
 namespace JackSharpTest.Dummies
 {
-	public class ShutdownReceiver
-	{
-		public ShutdownReceiver ()
-		{
-		}
+    public class ShutdownReceiver
+    {
+        public ShutdownReceiver()
+        {
+        }
 
-		public int Shutdowns { get; private set; }
+        public int Shutdowns { get; private set; }
 
-		public void OnShutdown (object sender, EventArgs e)
-		{
-			Shutdowns += 1;
-		}
-	}
+        public void OnShutdown(object sender, EventArgs e)
+        {
+            Shutdowns += 1;
+        }
+    }
 }
 

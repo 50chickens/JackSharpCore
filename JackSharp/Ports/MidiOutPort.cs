@@ -25,19 +25,19 @@ using JackSharp.Processing;
 
 namespace JackSharp.Ports
 {
-	/// <summary>
-	/// MIDI out port.
-	/// </summary>
-	public sealed class MidiOutPort : Port
-	{
-		internal unsafe MidiOutPort (UnsafeStructs.jack_client_t* jackClient, int index, string nameFormat = null) : base (jackClient, index, Direction.Out, PortType.Midi, nameFormat)
-		{
-		}
+    /// <summary>
+    /// MIDI out port.
+    /// </summary>
+    public sealed class MidiOutPort : Port
+    {
+        internal unsafe MidiOutPort(UnsafeStructs.jack_client_t* jackClient, int index, string nameFormat = null) : base(jackClient, index, Direction.Out, PortType.Midi, nameFormat)
+        {
+        }
 
-		internal MidiEventCollection<MidiOutEvent> GetMidiBuffer ()
-		{
-			MidiEventCollection<MidiOutEvent> eventCollection = new MidiEventCollection<MidiOutEvent> (this);
-			return eventCollection;
-		}
-	}
+        internal MidiEventCollection<MidiOutEvent> GetMidiBuffer()
+        {
+            MidiEventCollection<MidiOutEvent> eventCollection = new MidiEventCollection<MidiOutEvent>(this);
+            return eventCollection;
+        }
+    }
 }

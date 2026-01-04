@@ -22,18 +22,18 @@
 // THE SOFTWARE.
 namespace JackSharp.Ports
 {
-	/// <summary>
-	/// Direction of data flow in ports.
-	/// </summary>
-	public enum Direction
-	{
-		/// <summary>
-		/// Port is inlet.
-		/// </summary>
-		In,
-		/// <summary>
-		/// Port is outlet.
-		/// </summary>
-		Out
-	}
+    /// <summary>
+    /// Direction of data flow in ports.
+    /// </summary>
+    public enum Direction
+    {
+        /// <summary>
+        /// Port is inlet.
+        /// </summary>
+        In,
+        /// <summary>
+        /// Port is outlet.
+        /// </summary>
+        Out
+    }
 }

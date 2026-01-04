@@ -21,64 +21,64 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using NUnit.Framework;
 using JackSharp;
-using System.Threading;
 using JackSharpTest.Dummies;
+using NUnit.Framework;
+using System.Threading;
 using Assert = NUnit.Framework.Legacy.ClassicAssert;
 
 namespace JackSharpTest
 {
-	[TestFixture]
-	public class AudioTest
-	{
-		static Processor _client;
+    [TestFixture]
+    public class AudioTest
+    {
+        static Processor _client;
 
-		[SetUp]
-		public static void CreateClient ()
-		{
-			_client = new Processor ("testAudio", 2, 2);
-		}
+        [SetUp]
+        public static void CreateClient()
+        {
+            _client = new Processor("testAudio", 2, 2);
+        }
 
-		[Test]
-		public virtual void AudioCopying ()
-		{
-			ClientReceiver receiver = new ClientReceiver ();
-			_client.ProcessFunc = receiver.CopyInToOutAction;
-			_client.Start ();
-			Thread.Sleep (2000);
-			Assert.IsTrue (receiver.Called > 0);
-		}
+        [Test]
+        public virtual void AudioCopying()
+        {
+            ClientReceiver receiver = new ClientReceiver();
+            _client.ProcessFunc = receiver.CopyInToOutAction;
+            _client.Start();
+            Thread.Sleep(2000);
+            Assert.IsTrue(receiver.Called > 0);
+        }
 
-		[Test]
-		public virtual void AudioAddMultipleActions ()
-		{
-			ClientReceiver receiver = new ClientReceiver ();
-			_client.ProcessFunc += receiver.CallBackOneAction;
-			_client.ProcessFunc += receiver.CallBackTwoAction;
-			_client.Start ();
-			Thread.Sleep (200);
-			_client.Stop ();
-			Assert.AreEqual (3, receiver.Called);
-		}
+        [Test]
+        public virtual void AudioAddMultipleActions()
+        {
+            ClientReceiver receiver = new ClientReceiver();
+            _client.ProcessFunc += receiver.CallBackOneAction;
+            _client.ProcessFunc += receiver.CallBackTwoAction;
+            _client.Start();
+            Thread.Sleep(200);
+            _client.Stop();
+            Assert.AreEqual(3, receiver.Called);
+        }
 
-		[Test]
-		public virtual void AudioAddRemoveAction ()
-		{
-			ClientReceiver receiver = new ClientReceiver ();
-			_client.ProcessFunc += receiver.CallBackOneAction;
-			_client.ProcessFunc += receiver.CallBackTwoAction;
-			_client.ProcessFunc -= receiver.CallBackOneAction;
-			_client.Start ();
-			Thread.Sleep (200);
-			_client.Stop ();
-			Assert.AreEqual (2, receiver.Called);
-		}
+        [Test]
+        public virtual void AudioAddRemoveAction()
+        {
+            ClientReceiver receiver = new ClientReceiver();
+            _client.ProcessFunc += receiver.CallBackOneAction;
+            _client.ProcessFunc += receiver.CallBackTwoAction;
+            _client.ProcessFunc -= receiver.CallBackOneAction;
+            _client.Start();
+            Thread.Sleep(200);
+            _client.Stop();
+            Assert.AreEqual(2, receiver.Called);
+        }
 
-		[TearDown]
-		public static void DestroyClient ()
-		{
-			_client.Dispose ();
-		}
-	}
+        [TearDown]
+        public static void DestroyClient()
+        {
+            _client.Dispose();
+        }
+    }
 }

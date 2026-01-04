@@ -23,19 +23,19 @@
 
 namespace JackSharp.Ports
 {
-	/// <summary>
-	/// Port type.
-	/// </summary>
-	public enum PortType
-	{
-		/// <summary>
-		/// Audio.
-		/// </summary>
-		Audio,
-		/// <summary>
-		/// MIDI.
-		/// </summary>
-		Midi
-	}
-    
+    /// <summary>
+    /// Port type.
+    /// </summary>
+    public enum PortType
+    {
+        /// <summary>
+        /// Audio.
+        /// </summary>
+        Audio,
+        /// <summary>
+        /// MIDI.
+        /// </summary>
+        Midi
+    }
+
 }

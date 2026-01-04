@@ -20,30 +20,32 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+using JackSharp.Processing;
 using System;
 using System.Linq;
-using JackSharp.Processing;
 
 namespace Jack.NAudioTest.WaveIntegration
 {
-	class Analyser
-	{
-		public Action<ProcessBuffer> AnalyseOutAction;
+    class Analyser
+    {
+        public Action<ProcessBuffer> AnalyseOutAction;
 
-		public int NotEmptySamples { get; private set; }
+        public int NotEmptySamples { get; private set; }
 
-		public Analyser ()
-		{
-			AnalyseOutAction = AnalyseOut;
-		}
+        public Analyser()
+        {
+            AnalyseOutAction = AnalyseOut;
+        }
 
-		void AnalyseOut (ProcessBuffer processItem)
-		{
-			foreach (AudioBuffer outBuffer in processItem.AudioOut) {
-				if (outBuffer.Audio.Any (s => s != 0)) {
-					NotEmptySamples++;
-				}
-			}
-		}
-	}
+        void AnalyseOut(ProcessBuffer processItem)
+        {
+            foreach (AudioBuffer outBuffer in processItem.AudioOut)
+            {
+                if (outBuffer.Audio.Any(s => s != 0))
+                {
+                    NotEmptySamples++;
+                }
+            }
+        }
+    }
 }

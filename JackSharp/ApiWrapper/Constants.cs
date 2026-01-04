@@ -22,11 +22,11 @@
 // THE SOFTWARE.
 namespace JackSharp.ApiWrapper
 {
-	static class Constants
-	{
+    static class Constants
+    {
         public const string JACK_LIB_NAME = "libjack";
 
         public const string JACK_DEFAULT_AUDIO_TYPE = "32 bit float mono audio";
-		public const string JACK_DEFAULT_MIDI_TYPE = "8 bit raw midi";
-	}
+        public const string JACK_DEFAULT_MIDI_TYPE = "8 bit raw midi";
+    }
 }

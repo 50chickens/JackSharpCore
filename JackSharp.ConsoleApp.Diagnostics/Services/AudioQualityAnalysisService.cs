@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using JackSharp.Processing;
 using JackSharp.ConsoleApp.Diagnostics.Logging;
 
 namespace JackSharp.ConsoleApp.Diagnostics.Services;
@@ -24,7 +18,7 @@ public class AudioQualityAnalysisService(ILog<AudioQualityAnalysisService> log)
     {
         try
         {
-                _log.Info("Analyzing audio quality for sine wave");
+            _log.Info("Analyzing audio quality for sine wave");
             // Generate reference sine wave
             var referenceSignal = GenerateSineWave(frequency, durationSeconds, 0.5);
             _log.Info($"Generated {referenceSignal.Length} samples ({referenceSignal.Length / (double)SampleRate:F2}s)\n");
@@ -51,23 +45,23 @@ public class AudioQualityAnalysisService(ILog<AudioQualityAnalysisService> log)
                 // Playback on first two channels
                 if (isPlaying && playbackIndex < referenceSignal.Length)
                 {
-                    int framesToPlay = Math.Min(buffer.AudioOut[0].Audio.Length, 
+                    int framesToPlay = Math.Min(buffer.AudioOut[0].Audio.Length,
                         referenceSignal.Length - playbackIndex);
-                    
+
                     for (int i = 0; i < framesToPlay; i++)
                     {
                         buffer.AudioOut[0].Audio[i] = referenceSignal[playbackIndex];
                         buffer.AudioOut[1].Audio[i] = referenceSignal[playbackIndex];
                         playbackIndex++;
                     }
-                    
+
                     // Zero out remaining samples
                     for (int i = framesToPlay; i < buffer.AudioOut[0].Audio.Length; i++)
                     {
                         buffer.AudioOut[0].Audio[i] = 0.0f;
                         buffer.AudioOut[1].Audio[i] = 0.0f;
                     }
-                    
+
                     if (playbackIndex >= referenceSignal.Length)
                         isPlaying = false;
                 }
@@ -112,7 +106,7 @@ public class AudioQualityAnalysisService(ILog<AudioQualityAnalysisService> log)
             var thdDifference = capturedAnalysis.Thd - refAnalysis.Thd;
 
             _log.Info($"Comparison: Level {levelDifference:+0.00;-0.00;0.00}dB | Peak {peakDifference:+0.00;-0.00;0.00}dB | THD {thdDifference:+0.00;-0.00;0.00}%");
-            
+
             if (Math.Abs(levelDifference) < 0.5 && Math.Abs(peakDifference) < 1.0 && capturedAnalysis.Thd < 1.0)
             {
                 _log.Info("Status: Pass - Signal quality maintained");

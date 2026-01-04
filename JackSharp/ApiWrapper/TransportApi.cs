@@ -1,6 +1,3 @@
-using System.Runtime.InteropServices;
-using JackSharp.Pointers;
-
 namespace JackSharp.ApiWrapper
 {
     // static class TransportApi

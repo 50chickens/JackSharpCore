@@ -20,29 +20,29 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-using System;
 using JackSharp.Ports;
+using System;
 
 namespace JackSharp.Events
 {
-	/// <summary>
-	/// Port rename event arguments.
-	/// </summary>
-	public sealed class PortRenameEventArgs : EventArgs
-	{
-		/// <summary>
-		/// Gets the port.
-		/// </summary>
-		/// <value>The port.</value>
-		public PortReference Port { get; private set; }
+    /// <summary>
+    /// Port rename event arguments.
+    /// </summary>
+    public sealed class PortRenameEventArgs : EventArgs
+    {
+        /// <summary>
+        /// Gets the port.
+        /// </summary>
+        /// <value>The port.</value>
+        public PortReference Port { get; private set; }
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="JackSharp.Events.PortRenameEventArgs"/> class.
-		/// </summary>
-		/// <param name="port">Port.</param>
-		public PortRenameEventArgs (PortReference port)
-		{
-			Port = port;
-		}
-	}
+        /// <summary>
+        /// Initializes a new instance of the <see cref="JackSharp.Events.PortRenameEventArgs"/> class.
+        /// </summary>
+        /// <param name="port">Port.</param>
+        public PortRenameEventArgs(PortReference port)
+        {
+            Port = port;
+        }
+    }
 }

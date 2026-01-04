@@ -25,16 +25,16 @@ using System.Runtime.InteropServices;
 
 namespace JackSharp.Pointers
 {
-	class StringFromIntPtr
-	{
-		[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-		public delegate void FromIntPtrDelegate (IntPtr ptr);
+    class StringFromIntPtr
+    {
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void FromIntPtrDelegate(IntPtr ptr);
 
-		public string Value { get; protected set; }
+        public string Value { get; protected set; }
 
-		public void FromIntPtr (IntPtr ptr)
-		{
-			Value = ptr.PtrToString ();
-		}
-	}
+        public void FromIntPtr(IntPtr ptr)
+        {
+            Value = ptr.PtrToString();
+        }
+    }
 }

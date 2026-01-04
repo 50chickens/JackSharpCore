@@ -20,45 +20,45 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-using System;
 using JackSharp.Ports;
+using System;
 
 namespace JackSharp.Events
 {
-	/// <summary>
-	/// Connection change event arguments.
-	/// </summary>
-	public sealed class ConnectionChangeEventArgs : EventArgs
-	{
-		/// <summary>
-		/// Gets the outlet.
-		/// </summary>
-		/// <value>The outlet.</value>
-		public PortReference Outlet { get; private set; }
+    /// <summary>
+    /// Connection change event arguments.
+    /// </summary>
+    public sealed class ConnectionChangeEventArgs : EventArgs
+    {
+        /// <summary>
+        /// Gets the outlet.
+        /// </summary>
+        /// <value>The outlet.</value>
+        public PortReference Outlet { get; private set; }
 
-		/// <summary>
-		/// Gets the inlet.
-		/// </summary>
-		/// <value>The inlet.</value>
-		public PortReference Inlet { get; private set; }
+        /// <summary>
+        /// Gets the inlet.
+        /// </summary>
+        /// <value>The inlet.</value>
+        public PortReference Inlet { get; private set; }
 
-		/// <summary>
-		/// Gets the type of the change.
-		/// </summary>
-		/// <value>The type of the change.</value>
-		public ChangeType ChangeType { get; private set; }
+        /// <summary>
+        /// Gets the type of the change.
+        /// </summary>
+        /// <value>The type of the change.</value>
+        public ChangeType ChangeType { get; private set; }
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="JackSharp.Events.ConnectionChangeEventArgs"/> class.
-		/// </summary>
-		/// <param name="outlet">Outlet.</param>
-		/// <param name="inlet">Inlet.</param>
-		/// <param name="changeType">Change type.</param>
-		public ConnectionChangeEventArgs (PortReference outlet, PortReference inlet, ChangeType changeType)
-		{
-			Outlet = outlet;
-			Inlet = inlet;
-			ChangeType = changeType;
-		}
-	}
+        /// <summary>
+        /// Initializes a new instance of the <see cref="JackSharp.Events.ConnectionChangeEventArgs"/> class.
+        /// </summary>
+        /// <param name="outlet">Outlet.</param>
+        /// <param name="inlet">Inlet.</param>
+        /// <param name="changeType">Change type.</param>
+        public ConnectionChangeEventArgs(PortReference outlet, PortReference inlet, ChangeType changeType)
+        {
+            Outlet = outlet;
+            Inlet = inlet;
+            ChangeType = changeType;
+        }
+    }
 }
